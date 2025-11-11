@@ -1,24 +1,5 @@
 # AI-Powered Blockchain Analytics Platform
 
-![Logo](https://via.placeholder.com/150)
-
-## Table des matières
-1. [Objectif](#objectif)  
-2. [Stack technique](#stack-technique)  
-3. [Fonctionnalités](#fonctionnalités)  
-4. [Architecture du projet](#architecture-du-projet)  
-5. [Installation et setup](#installation-et-setup)  
-6. [Backend](#backend)  
-7. [Frontend](#frontend)  
-8. [Microservice IA](#microservice-ia)  
-9. [Base de données et stockage](#base-de-données-et-stockage)  
-10. [Alertes](#alertes)  
-11. [Déploiement](#déploiement)  
-12. [Tests et CI/CD](#tests-et-cicd)  
-13. [Liens et ressources](#liens-et-ressources)
-
----
-
 ## Objectif
 Le projet **AI-Powered Blockchain Analytics Platform** permet :  
 - Analyse en temps réel des prix crypto et historique  
@@ -54,3 +35,10 @@ Le projet est modulable, extensible et conçu pour un **MVP rapide** puis des é
 ---
 
 ## Architecture du projet
+ai-blockchain-analytics/
+├─ frontend/ # React app
+├─ backend/ # Spring Boot API
+├─ ml/ # Microservice IA FastAPI
+├─ infra/ # Docker-compose, scripts
+├─ docs/ # Documentation
+
