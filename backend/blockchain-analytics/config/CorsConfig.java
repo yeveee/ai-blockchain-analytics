@@ -15,8 +15,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                            "https://ai-blockchain-analytics.vercel.app",
-                            "https://ai-blockchain-analytics-5yub757p9-yevs-projects-1d7b945c.vercel.app"
+                            "https://ai-blockchain-analytics-qoxonlng1-yevs-projects-1d7b945c.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
