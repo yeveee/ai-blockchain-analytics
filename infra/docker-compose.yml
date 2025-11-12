@@ -23,5 +23,23 @@ services:
     depends_on:
       - db
 
+  backend:
+    image: yeve/ai-blockchain-backend:latest
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ai_blockchain
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - db
+
+  frontend:
+    image: yeve/ai-blockchain-frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
 volumes:
   db_data:
