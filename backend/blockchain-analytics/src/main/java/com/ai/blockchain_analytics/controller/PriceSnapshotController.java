@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = "http://localhost:3000") // permet au frontend React d'accéder
+@CrossOrigin(origins = "https://ai-blockchain-analytics.vercel.app") // permet au frontend React d'accéder
 
 @RestController
 @RequestMapping("/api/prices")
