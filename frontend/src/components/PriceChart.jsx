@@ -14,25 +14,26 @@ const PriceChart = () => {
 
 
     useEffect(() => {
-        axios.get('http://localhost:8081/api/prices/snapshots')
+    axios.get('https://aware-imagination.up.railway.app/api/prices/snapshots')
+    //axios.get('http://localhost:8081/api/prices/snapshots')
+    
+        .then(res => {
+            console.log("Données reçues:", res.data); // check here
+            const filteredData = res.data
+                .filter(d => d.symbol === symbol)
+                .map(d => ({
+                    timestamp: d.timestamp,
+                    price: d.price
+                }));
+            setData(filteredData);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.error("Erreur Axios :", err);
+            setLoading(false);
+        });
+}, [symbol]); // Re-fetch when symbol changes
 
-            .then(res => {
-                console.log("Données reçues:", res.data); // <- vérifie ici
-                const filteredData = res.data
-          .filter(d => d.symbol === symbol)
-          .map(d => ({
-            timestamp: d.timestamp,
-            price: d.price
-          }));
-        setData(filteredData);
-        setLoading(false);
-      })
-            
-            .catch(err => {
-        console.error("Erreur Axios :", err);
-        setLoading(false);
-      });
-  }, [symbol]); // Re-fetch quand symbol change
 
   if (loading) return <div>Chargement des données...</div>;
   if (data.length === 0) return <div>Aucune donnée pour {symbol}</div>;
