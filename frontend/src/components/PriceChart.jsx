@@ -14,7 +14,7 @@ const PriceChart = () => {
 
 
     useEffect(() => {
-    axios.get('https://aware-imagination.up.railway.app/api/prices/snapshots')
+    axios.get('https://back-production-710c.up.railway.app/api/prices/snapshots')
     //axios.get('http://localhost:8081/api/prices/snapshots')
     
         .then(res => {
