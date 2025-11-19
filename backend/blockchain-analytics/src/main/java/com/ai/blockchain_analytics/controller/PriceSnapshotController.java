@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 @CrossOrigin(origins = {
     "http://localhost:3000",
+    "http://localhost:3001",
     "https://ai-blockchain-analytics.vercel.app",
     "https://ai-blockchain-analytics-5yub757p9-yevs-projects-1d7b945c.vercel.app",
     "https://ai-blockchain-analytics-qoxonlng1-yevs-projects-1d7b945c.vercel.app"
