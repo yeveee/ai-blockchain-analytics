@@ -7,6 +7,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: ai_blockchain
+      COVALENT_API_KEY: cqt_rQP6y3KktKfbRQKVFXY4xvkQmmJh
     ports:
       - "5433:5432"
     volumes:
