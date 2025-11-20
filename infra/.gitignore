@@ -1,0 +1,9 @@
+# Environment variables - NEVER commit these!
+.env
+
+# Docker volumes and data
+postgres_data/
+db_data/
+
+# Logs
+*.log
