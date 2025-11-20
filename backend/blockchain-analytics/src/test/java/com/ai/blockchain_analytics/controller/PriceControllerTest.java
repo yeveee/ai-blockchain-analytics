@@ -3,7 +3,6 @@ package com.ai.blockchain_analytics.controller;
 import com.ai.blockchain_analytics.model.PriceSnapshot;
 import com.ai.blockchain_analytics.repository.PriceSnapshotRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.given;
 
-@WebMvcTest(PriceController.class)
+@WebMvcTest(PriceSnapshotController.class)
 public class PriceControllerTest {
 
     @Autowired
@@ -36,7 +35,7 @@ public class PriceControllerTest {
 
         given(repository.findAll()).willReturn(List.of(snapshot)); // définit ce que le mock doit retourner
 
-        mockMvc.perform(get("/api/prices/current"))
+        mockMvc.perform(get("/api/prices/snapshots"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].symbol").value("BTC"))
                 .andExpect(jsonPath("$[0].price").value(60000));
