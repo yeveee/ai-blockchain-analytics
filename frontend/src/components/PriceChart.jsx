@@ -1,114 +1,92 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import styles from './PriceChart.module.css';
+import { API_ENDPOINTS, CRYPTOCURRENCIES } from '../constants/api';
 
 const PriceChart = () => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-  const [symbol, setSymbol] = useState("BTC"); // crypto sélectionnée
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [symbol, setSymbol] = useState("BTC");
 
-  // Fonction pour gérer la sélection
   const handleSelect = (e) => {
     setSymbol(e.target.value);
   };
 
+  useEffect(() => {
+    const fetchPriceData = async () => {
+      setLoading(true);
+      setError(null);
 
-    useEffect(() => {
-    //axios.get('https://back-production-710c.up.railway.app/api/prices/snapshots')
-    axios.get('http://localhost:8081/api/prices/snapshots')
-    
-        .then(res => {
-            console.log("Données reçues:", res.data); // check here
-            const filteredData = res.data
-                .filter(d => d.symbol === symbol)
-                .map(d => ({
-                    timestamp: d.timestamp,
-                    price: d.price
-                }));
-            setData(filteredData);
-            setLoading(false);
-        })
-        .catch(err => {
-            console.error("Erreur Axios :", err);
-            setLoading(false);
-        });
-}, [symbol]); // Re-fetch when symbol changes
+      try {
+        const response = await axios.get(API_ENDPOINTS.PRICE_SNAPSHOTS);
+        console.log("Données reçues:", response.data);
+        
+        const filteredData = response.data
+          .filter(d => d.symbol === symbol)
+          .map(d => ({
+            timestamp: d.timestamp,
+            price: d.price
+          }));
+        
+        setData(filteredData);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des prix:", err);
+        setError("Impossible de charger les données de prix");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPriceData();
+  }, [symbol]);
 
 
-  if (loading) return (
-    <div style={{ 
-      padding: "2rem", 
-      textAlign: "center", 
-      backgroundColor: "#f8f9fa", 
-      borderRadius: "10px",
-      margin: "2rem auto",
-      maxWidth: "900px"
-    }}>
-      ⏳ Chargement des données...
-    </div>
-  );
-  
-  if (data.length === 0) return (
-    <div style={{ 
-      padding: "2rem", 
-      textAlign: "center", 
-      backgroundColor: "#fadbd8", 
-      borderRadius: "10px",
-      margin: "2rem auto",
-      maxWidth: "900px",
-      color: "#e74c3c",
-      border: "1px solid #e74c3c"
-    }}>
-      ❌ Aucune donnée pour {symbol}
-    </div>
-  );
-
+  if (loading) {
     return (
-        <div style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          padding: "2rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
-        }}>
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center",
-        marginBottom: "1.5rem",
-        flexWrap: "wrap",
-        gap: "1rem"
-      }}>
-        <h2 style={{ color: "#2c3e50", margin: 0 }}>
+      <div className={styles.loading}>
+        ⏳ Chargement des données...
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className={styles.error}>
+        ❌ {error}
+      </div>
+    );
+  }
+  
+  if (data.length === 0) {
+    return (
+      <div className={styles.error}>
+        ❌ Aucune donnée pour {symbol}
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>
           📈 Prix {symbol}
         </h2>
         <select 
           onChange={handleSelect} 
           value={symbol}
-          style={{
-            padding: "0.5rem 1rem",
-            fontSize: "1rem",
-            border: "2px solid #3498db",
-            borderRadius: "5px",
-            backgroundColor: "white",
-            color: "#2c3e50",
-            cursor: "pointer",
-            fontWeight: "bold"
-          }}
+          className={styles.select}
         >
-          <option value="BTC">₿ Bitcoin</option>
-          <option value="ETH">Ξ Ethereum</option>
-          <option value="MATIC">⬡ Polygon</option>
+          {CRYPTOCURRENCIES.map(crypto => (
+            <option key={crypto.value} value={crypto.value}>
+              {crypto.label}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div style={{ 
-        backgroundColor: "white", 
-        padding: "1rem",
-        borderRadius: "5px",
-        overflow: "auto"
-      }}>
+      <div className={styles.chartWrapper}>
         <LineChart width={800} height={400} data={data}>
           <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
           <XAxis dataKey="timestamp" />
@@ -118,7 +96,7 @@ const PriceChart = () => {
         </LineChart>
       </div>
     </div>
-    );
+  );
 };
 
 export default PriceChart;

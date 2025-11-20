@@ -1,46 +1,80 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
   db:
-    image: postgres:15
+    image: postgres:15-alpine
+    container_name: blockchain-analytics-db
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: ai_blockchain
-      COVALENT_API_KEY: cqt_rQP6y3KktKfbRQKVFXY4xvkQmmJh
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-ai_blockchain}
     ports:
-      - "5433:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - blockchain-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # pgAdmin for Database Management
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
+    container_name: blockchain-analytics-pgadmin
+    restart: unless-stopped
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@example.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     ports:
-      - "8080:80"
+      - "${PGADMIN_PORT:-8080}:80"
     depends_on:
       - db
+    networks:
+      - blockchain-network
 
+  # Spring Boot Backend
   backend:
     image: yeve/ai-blockchain-backend:latest
+    container_name: blockchain-analytics-backend
+    restart: unless-stopped
     ports:
-      - "8081:8081"
+      - "${BACKEND_PORT:-8081}:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ai_blockchain
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-ai_blockchain}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      COVALENT_API_KEY: ${COVALENT_API_KEY}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: ${SPRING_JPA_SHOW_SQL:-false}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    networks:
+      - blockchain-network
 
+  # React Frontend
   frontend:
     image: yeve/ai-blockchain-frontend:latest
+    container_name: blockchain-analytics-frontend
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL:-http://localhost:8081}
     depends_on:
       - backend
+    networks:
+      - blockchain-network
 
 volumes:
   db_data:
+    driver: local
+
+networks:
+  blockchain-network:
+    driver: bridge

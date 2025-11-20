@@ -1,70 +1,168 @@
-# Getting Started with Create React App
+# Frontend - Blockchain Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Interface React moderne pour l'analyse blockchain et le suivi des portefeuilles Ethereum.
 
-## Available Scripts
+## 🏗️ Architecture
 
-In the project directory, you can run:
+Le frontend suit une architecture React moderne avec hooks et séparation des responsabilités :
+
+```
+src/
+├── components/          # Composants React
+│   ├── PriceChart.jsx           # Graphique de prix
+│   ├── PriceChart.module.css
+│   ├── WalletBalance.jsx        # Recherche de wallet
+│   └── WalletBalance.module.css
+├── constants/           # Constantes de l'application
+│   ├── api.js                   # URLs et endpoints API
+│   └── styles.js                # Thème et couleurs
+├── hooks/               # Custom React hooks
+│   └── useApi.js                # Hook pour appels API
+├── utils/               # Fonctions utilitaires
+│   └── formatters.js            # Formatage de données
+├── App.jsx              # Composant principal
+├── App.module.css
+└── index.js             # Point d'entrée
+```
+
+## ✨ Composants
+
+### PriceChart
+Affiche un graphique des prix historiques pour une cryptomonnaie sélectionnée.
+
+**Features:**
+- Sélecteur de crypto (BTC, ETH, MATIC)
+- Graphique interactif avec Recharts
+- Actualisation automatique des données
+- États de chargement et d'erreur
+
+### WalletBalance
+Permet de rechercher et afficher les balances ERC-20 d'un wallet Ethereum.
+
+**Features:**
+- Validation d'adresse Ethereum
+- Affichage des tokens avec valeurs USD
+- Calcul automatique du total
+- Gestion d'erreurs
+
+## 🎨 Styling
+
+Le projet utilise **CSS Modules** pour un styling scopé et maintenable :
+
+- Pas de conflits de noms de classes
+- Styles co-localisés avec les composants
+- Thème centralisé dans `constants/styles.js`
+- Support du hover et des transitions
+
+## 🔧 Configuration
+
+### Variables d'Environnement
+
+Créer un fichier `.env` à la racine du frontend :
+
+```bash
+REACT_APP_BACKEND_URL=http://localhost:8081
+```
+
+### Constants API
+
+Les endpoints sont configurés dans `src/constants/api.js` :
+
+```javascript
+export const API_ENDPOINTS = {
+  WALLET_BALANCE: (address) => `${API_BASE_URL}/api/wallet/${address}`,
+  PRICE_SNAPSHOTS: `${API_BASE_URL}/api/prices/snapshots`,
+};
+```
+
+## 🚀 Scripts Disponibles
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Lance l'application en mode développement sur http://localhost:3000
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Exécute les tests en mode watch
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Compile l'application pour la production dans le dossier `build`
 
 ### `npm run eject`
+⚠️ Opération irréversible qui expose la configuration
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 📦 Dépendances
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Production
+- **react** (18.2.0) - Bibliothèque UI
+- **react-dom** (18.2.0) - Rendu React
+- **axios** (1.13.2) - Client HTTP
+- **recharts** (2.9.0) - Graphiques
+- **react-scripts** (5.0.1) - Toolchain Create React App
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Développement
+- **@testing-library/react** - Tests de composants
+- **@testing-library/jest-dom** - Matchers Jest personnalisés
+- **@testing-library/user-event** - Simulation d'événements utilisateur
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🧪 Tests
 
-## Learn More
+```bash
+# Exécuter tous les tests
+npm test
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Avec couverture
+npm test -- --coverage
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🎯 Bonnes Pratiques Appliquées
 
-### Code Splitting
+- ✅ **CSS Modules** pour éviter les conflits de styles
+- ✅ **Custom hooks** pour la logique réutilisable
+- ✅ **Constants** pour les valeurs partagées
+- ✅ **Utility functions** pour le formatage
+- ✅ **Error boundaries** et gestion d'erreurs
+- ✅ **Loading states** pour une meilleure UX
+- ✅ **Validation** des entrées utilisateur
+- ✅ **Code splitting** avec imports dynamiques
+- ✅ **Responsive design** mobile-first
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🌐 Déploiement
 
-### Analyzing the Bundle Size
+### Build de Production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm run build
+```
 
-### Making a Progressive Web App
+L'application optimisée est générée dans le dossier `build/`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Déploiement Vercel
 
-### Advanced Configuration
+```bash
+# Installer Vercel CLI
+npm i -g vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+# Déployer
+vercel --prod
+```
 
-### Deployment
+### Variables d'Environnement Production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Configurer `REACT_APP_BACKEND_URL` avec l'URL du backend en production.
 
-### `npm run build` fails to minify
+## 🐛 Debugging
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### React DevTools
+Installer l'extension React DevTools pour Chrome/Firefox
+
+### Console Logs
+Les logs sont visibles dans la console du navigateur :
+- Données API reçues
+- Erreurs de réseau
+- États des composants
+
+## 📚 Ressources
+
+- [React Documentation](https://react.dev/)
+- [Create React App](https://create-react-app.dev/)
+- [Recharts Documentation](https://recharts.org/)
+- [CSS Modules](https://github.com/css-modules/css-modules)
